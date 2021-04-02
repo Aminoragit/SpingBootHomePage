@@ -38,8 +38,6 @@ public class ItemRepositoryTest extends StudyApplicationTests {
     @Test
     public void read(){
         Long id =1L;
-
-        
         Optional<Item> item = itemRepository.findById(id);
         
         //값이 있는지 없는지만 확인하기

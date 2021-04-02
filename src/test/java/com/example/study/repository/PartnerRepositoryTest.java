@@ -10,12 +10,11 @@ import java.time.LocalDateTime;
 
 public class PartnerRepositoryTest extends StudyApplicationTests {
 
-@Autowired
+    @Autowired
     private PartnerRepository partnerRepository;
 
     @Test
     public void create(){
-
         String name="Partner01";
         String status="REGISTERED";
         String address= "서울시 강남구";
