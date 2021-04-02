@@ -39,6 +39,9 @@ public class Item {
     private LocalDateTime updatedAt;
     private String updatedBy;
 
+
+    private Long partner_id;
+
 //
 //    //1:N
 //

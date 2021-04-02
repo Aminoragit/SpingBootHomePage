@@ -1,10 +1,8 @@
 package com.example.study.repository;
-import com.example.study.model.entity.Item;
 import com.example.study.StudyApplicationTests;
 import com.example.study.model.entity.User;
-import jdk.vm.ci.meta.Local;
 import org.junit.Assert;
-import org.junit.jupiter.api.Test;
+import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import javax.transaction.Transactional;
@@ -45,6 +43,10 @@ public class UserRepositoryTest extends StudyApplicationTests {
     @Test
     @Transactional
     public void read(){
+
+        User user = userRepository.findFirstByPhoneNumberOrderByIdDesc("010-1111-2222");
+        Assert.assertNotNull(user);
+
      }
 
     @Test

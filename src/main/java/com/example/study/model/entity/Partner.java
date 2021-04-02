@@ -36,4 +36,10 @@ public class Partner {
 
 
 
+    //외래키 지정
+    private Long categoryId;
+    
+
+
+
 }
