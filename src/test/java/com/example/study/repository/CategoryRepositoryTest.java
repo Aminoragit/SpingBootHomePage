@@ -1,11 +1,13 @@
 package com.example.study.repository;
 import com.example.study.StudyApplicationTests;
 import com.example.study.model.entity.Category;
+import org.junit.Assert;
 import org.junit.Test;
 import org.junit.jupiter.api.Assertions;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.time.LocalDateTime;
+import java.util.Optional;
 
 public class CategoryRepositoryTest extends StudyApplicationTests {
 
@@ -37,6 +39,18 @@ public class CategoryRepositoryTest extends StudyApplicationTests {
 
     @Test
     public void read(){
+
+        String type = "COMPUTER";
+        Optional<Category> optionalCategory = categoryRepository.findByType("COMPUTER");
+
+        optionalCategory.ifPresent(c->{
+
+            Assert.assertEquals(c.getType(),type);
+            System.out.println(c.getId());
+            System.out.println(c.getType());
+            System.out.println(c.getTitle());
+
+        });
 
     }
 
