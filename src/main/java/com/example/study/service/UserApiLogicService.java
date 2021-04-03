@@ -48,14 +48,11 @@ public class UserApiLogicService implements CrudInterface<UserApiRequest, UserAp
     @Override
     public Header<UserApiResponse> read(Long id) {
         //1. id -> repository getOne, getById
-        Optional<User> optional = userRepository.findById(id);
-
-
         //2. user-> userApiResponse return
-        //map()으로 user가 있는지 확인
-        //orElseGet없을경우 뭘할지 Header의 ERROR메서드 실행
-       return optional
-               .map(user->response(user))
+        //Optianl<User> optianl로 생성후 해도 되지만
+        //아래처럼 람다식으로 해도 정상작동한다.
+        return userRepository.findById(id)
+                .map(user->response(user))
                .orElseGet(()->Header.ERROR("데이터없음"));
     }
 
