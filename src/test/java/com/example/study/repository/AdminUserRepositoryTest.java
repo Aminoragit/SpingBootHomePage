@@ -27,5 +27,6 @@ public class AdminUserRepositoryTest extends StudyApplicationTests {
         Assert.assertNotNull(newAdminUser);
 
         newAdminUser.setAccount("CHANGE");
+        adminUserRepository.save(newAdminUser);
     }
 }

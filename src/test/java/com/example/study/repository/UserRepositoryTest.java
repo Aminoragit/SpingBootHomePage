@@ -24,6 +24,7 @@ public class UserRepositoryTest extends StudyApplicationTests {
         LocalDateTime createdAt = LocalDateTime.now();
         String createdBy = "AdminServer";
 
+
         User user = new User();
         user.setAccount(account);
         user.setPassword(password);
@@ -32,6 +33,17 @@ public class UserRepositoryTest extends StudyApplicationTests {
         user.setRegisteredAt(registeredAt);
 //        user.setCreatedAt(createdAt);
 //        user.setCreatedBy(createdBy);
+
+        //Builder를 사용해서 간단하게 생성자 생성
+        //시작 builder()끝이 .build()이면 된다.
+        User u = User.builder()
+                .account(account)
+                .password(password)
+                .status(status)
+                .email(email)
+                .build();
+
+
 
         User newUser = userRepository.save(user);
 
@@ -44,6 +56,11 @@ public class UserRepositoryTest extends StudyApplicationTests {
     @Transactional
     public void read() {
         User user = userRepository.findFirstByPhoneNumberOrderByIdDesc("010-1111-2222");
+
+
+        //User의 Accesrs를 사용하면 업데이트할때에 아래처럼 간편하게 설정가능하다.
+        user.setEmail("").setPhoneNumber("").setStatus("");
+        User u = new User().setAccount("").setEmail("").setPassword("");
 
         if (user != null) {
             user.getOrderGroupList().stream().forEach(orderGroup -> {
