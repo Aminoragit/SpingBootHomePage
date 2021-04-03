@@ -29,5 +29,36 @@ public class Header<T> {
     
     //<T>제네릭 사용으로 data에 유연성을 줌
     private T data;
-    
+
+
+    //OK
+    public static <T> Header<T> OK(){
+        return (Header<T>) Header
+                .builder()
+                .transactionTime(LocalDateTime.now())
+                .resultCode("OK")
+                .description("OK")
+                .build();
+    }
+
+    //DATA OK
+    public static <T> Header<T> OK(T data){
+        return (Header<T>) Header
+                .builder()
+                .transactionTime(LocalDateTime.now())
+                .resultCode("OK")
+                .description("OK")
+                .data(data)
+                .build();
+    }
+
+    //Error
+    public static <T> Header<T> Error(String description){
+        return (Header<T>) Header
+                .builder()
+                .transactionTime(LocalDateTime.now())
+                .resultCode("ERROR")
+                .description(description)
+                .build();
+    }
 }
