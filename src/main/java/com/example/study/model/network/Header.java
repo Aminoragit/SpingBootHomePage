@@ -10,7 +10,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public aspect Header {
+public class Header {
 
     // api 통신시간
     private String transactionTime;
