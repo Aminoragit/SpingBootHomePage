@@ -3,6 +3,8 @@ package com.example.study.controller.api;
 
 import com.example.study.ifs.CrudInterface;
 import com.example.study.model.network.Header;
+import com.example.study.model.network.request.UserApiRequest;
+import com.example.study.model.network.response.UserApiResponse;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -11,29 +13,36 @@ import org.springframework.web.bind.annotation.*;
 //일일히 CRUD를 설정해주는건 귀찮으니
 //ifs->CrudInterface 인터페이스 작성
 //각 Crud의 매핑설정
-public class UserApiController implements CrudInterface {
+public class UserApiController implements CrudInterface<UserApiRequest,UserApiResponse> {
 
     @Override
     @PostMapping("")
-    public Header create(){
+    public Header<UserApiResponse> create(@RequestBody UserApiRequest userApiRequest)
+    {
         return null;
+
     }
 
     @Override
     @GetMapping("{id}")
-    public Header read(@PathVariable(name="id") Long id) {
+    public Header<UserApiResponse>
+        read(@PathVariable(name="id") Long id) {
         return null;
     }
 
     @Override
     @PutMapping("")
-    public Header update() {
+    public Header<UserApiResponse>
+        update(@RequestBody UserApiRequest request) {
+
         return null;
     }
 
     @Override
     @DeleteMapping("{id}")
-    public Header delete(@PathVariable(name="id") Long id) {
+    public Header
+        delete(@PathVariable(name="id") Long id) {
+
         return null;
     }
 
