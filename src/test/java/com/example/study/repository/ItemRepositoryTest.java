@@ -26,7 +26,7 @@ public class ItemRepositoryTest extends StudyApplicationTests {
         item.setRegisteredAt(LocalDateTime.now());
         item.setCreatedAt(LocalDateTime.now());
         item.setCreatedBy("Partner01");
-        item.setPartner_id(1L);
+//        item.setPartner_id(1L);
 
         //아이템이 제대로 생성됬는지 확인하기 위한것+sql에 적용하기 위한것
         Item newItem = itemRepository.save(item);

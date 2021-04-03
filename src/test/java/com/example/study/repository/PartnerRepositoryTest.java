@@ -41,7 +41,7 @@ public class PartnerRepositoryTest extends StudyApplicationTests {
         partner.setCreatedAt(createdAt);
         partner.setCreatedBy(createdBy);
         partner.setRegisteredAt(registeredAt);
-        partner.setCategoryId(categoryId);
+//        partner.setCategoryId(categoryId);
 
 
         Partner newPartner = partnerRepository.save(partner);

@@ -25,8 +25,8 @@ public class OrderDetailRepositoryTest extends StudyApplicationTests {
         orderDetail.setTotalPrice(BigDecimal.valueOf(900000));
 
 
-        orderDetail.setOrderGroupId(1L);
-        orderDetail.setItemId(1L);
+//        orderDetail.setOrderGroupId(1L);
+//        orderDetail.setItemId(1L);
 
         orderDetail.setCreatedAt(LocalDateTime.now());
         orderDetail.setCreatedBy("AdminServer");
