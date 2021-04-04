@@ -7,10 +7,22 @@ import com.example.study.model.network.request.UserApiRequest;
 import com.example.study.model.network.response.UserApiResponse;
 import com.example.study.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.ResponseStatus;
 
 import java.time.LocalDateTime;
 import java.util.Optional;
+import java.util.logging.ErrorManager;
+
+
+//409 중복 충돌 status code
+@ResponseStatus(code = HttpStatus.CONFLICT)
+class AlreadyExistsException extends RuntimeException {
+    public AlreadyExistsException(String message) {
+        super(message);
+    }
+}
 
 @Service
 public class UserApiLogicService implements CrudInterface<UserApiRequest, UserApiResponse> {
@@ -152,7 +164,7 @@ public class UserApiLogicService implements CrudInterface<UserApiRequest, UserAp
 
         //map을 쓰려고 했는데 에러가 발생해서 if문으로 대체
         if (checkEmail.isPresent()){
-            return Header.ERROR("중복된 이메일입니다");
+            throw new AlreadyExistsException("중복된 이메일 입니다.");
         }
         else {User user = User.builder()
                 .account(userApiRequest.getAccount())
