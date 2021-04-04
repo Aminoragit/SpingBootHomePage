@@ -37,6 +37,6 @@ public class ItemApiController implements CrudInterface<ItemApiRequest,ItemApiRe
     @Override
     @DeleteMapping("{id}")
     public Header delete(@PathVariable Long id) {
-        return null;
+        return itemApiLogicService.delete(id);
     }
 }
