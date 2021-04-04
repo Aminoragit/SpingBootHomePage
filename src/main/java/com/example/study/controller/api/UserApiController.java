@@ -6,7 +6,6 @@ import com.example.study.model.network.Header;
 import com.example.study.model.network.request.UserApiRequest;
 import com.example.study.model.network.response.UserApiResponse;
 import com.example.study.service.UserApiLogicService;
-import jdk.internal.org.jline.utils.Log;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -14,7 +13,7 @@ import org.springframework.web.bind.annotation.*;
 
 @Slf4j
 @RestController
-@RequestMapping("/api/user")
+@RequestMapping("/api")
 
 //일일히 CRUD를 설정해주는건 귀찮으니
 //ifs->CrudInterface 인터페이스 작성
@@ -24,20 +23,18 @@ public class UserApiController implements CrudInterface<UserApiRequest,UserApiRe
     @Autowired
     private UserApiLogicService userApiLogicService;
 
-
-
     @Override
-    @PostMapping("") // /api/user
-    public Header<UserApiResponse> create(@RequestBody Header<UserApiRequest> request)
+    @PostMapping("/user") // /api/user
+    public Header<UserApiResponse>
+        create(@RequestBody Header<UserApiRequest> request)
     {
         //System.out.println과 비슷한 동작을 한다.
         log.info("{},{}",request,"ABC");
         return userApiLogicService.create(request);
-
     }
 
     @Override
-    @GetMapping("{id}")
+    @GetMapping("/user/{id}")
     public Header<UserApiResponse>
         read(@PathVariable(name="id") Long id) {
         log.info("read id : {}",id);
@@ -45,7 +42,7 @@ public class UserApiController implements CrudInterface<UserApiRequest,UserApiRe
     }
 
     @Override
-    @PutMapping("")
+    @PutMapping("/user")
     public Header<UserApiResponse>
         update(@RequestBody Header<UserApiRequest> request) {
 
@@ -55,11 +52,22 @@ public class UserApiController implements CrudInterface<UserApiRequest,UserApiRe
 
 
     @Override
-    @DeleteMapping("{id}")
+    @DeleteMapping("/user/{id}")
     public Header
         delete(@PathVariable(name="id") Long id) {
         log.info("delete : {}",id);
         return userApiLogicService.delete(id);
     }
+
+    @PostMapping("/user2") // /api/user2
+    public Header<UserApiResponse>
+        checkEmailCreate(@RequestBody Header<UserApiRequest> request)
+    {
+        //System.out.println과 비슷한 동작을 한다.
+        log.info("{},{}",request,"ABC");
+        return userApiLogicService.checkEmailCreate(request);
+    }
+
+
 
 }

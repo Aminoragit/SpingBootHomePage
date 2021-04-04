@@ -133,4 +133,38 @@ public class UserApiLogicService implements CrudInterface<UserApiRequest, UserAp
         //Header + data return
         return Header.OK(userApiResponse);
     }
+
+
+
+
+
+
+
+
+
+
+    public Header<UserApiResponse> checkEmailCreate(Header<UserApiRequest> request) {
+        //DB에 있는 User 데이터 가져오고
+        UserApiRequest userApiRequest = request.getData();
+
+        //위의 userApiRequest에서 Email부분만 가져와서 있는지 여부를 확인하고
+        Optional<User> checkEmail = userRepository.findByEmail(userApiRequest.getEmail());
+
+        //map을 쓰려고 했는데 에러가 발생해서 if문으로 대체
+        if (checkEmail.isPresent()){
+            return Header.ERROR("중복된 이메일입니다");
+        }
+        else {User user = User.builder()
+                .account(userApiRequest.getAccount())
+                .password(userApiRequest.getPassword())
+                .status("REGISTERED")
+                .phoneNumber(userApiRequest.getPhoneNumber())
+                .email(userApiRequest.getEmail())
+                .registeredAt(LocalDateTime.now())
+                .build();
+
+            User newUser= userRepository.save(user);
+            return response(newUser);
+        }
+    }
 }

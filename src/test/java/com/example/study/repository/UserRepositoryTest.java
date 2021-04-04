@@ -43,8 +43,6 @@ public class UserRepositoryTest extends StudyApplicationTests {
                 .email(email)
                 .build();
 
-
-
         User newUser = userRepository.save(user);
 
         Assert.assertNotNull(newUser);

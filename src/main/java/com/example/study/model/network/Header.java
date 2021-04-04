@@ -62,13 +62,5 @@ public class Header<T> {
                 .build();
     }
 
-    //중복반환
-    public static<T> Header<T> EXISTSemail(){
-        return (Header<T>) Header
-                .builder()
-                .transactionTime(LocalDateTime.now())
-                .resultCode("중복된 이메일입니다")
-                .description("중복된")
-                .build();
-    }
+
 }
