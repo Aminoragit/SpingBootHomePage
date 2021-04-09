@@ -15,40 +15,5 @@ import javax.annotation.PostConstruct;
 @RestController
 @RequestMapping("/api/item")
 public class ItemApiController extends CrudController<ItemApiRequest,ItemApiResponse,Item> {
-//
-//    @Autowired
-//    private ItemApiLogicService itemApiLogicService;
-//
-//    @PostConstruct
-//    public void init(){
-//        this.baseService=itemApiLogicService;
-//    }
-//
 
-// CrudController를 상속받으므로 아래와같이 중복해서 작성할 필요가 없다. 있어도 실행자체는 문제가 없다.
-
-
-//    @Override
-//    @PostMapping("")
-//    public Header<ItemApiResponse> create(@RequestBody Header<ItemApiRequest> request) {
-//        return itemApiLogicService.create(request);
-//    }
-//
-//    @Override
-//    @GetMapping("{id}")
-//    public Header<ItemApiResponse> read(@PathVariable Long id) {
-//        return itemApiLogicService.read(id);
-//    }
-//
-//    @Override
-//    @PutMapping("")
-//    public Header<ItemApiResponse> update(@RequestBody Header<ItemApiRequest> request) {
-//        return itemApiLogicService.update(request);
-//    }
-//
-//    @Override
-//    @DeleteMapping("{id}")
-//    public Header delete(@PathVariable Long id) {
-//        return itemApiLogicService.delete(id);
-//    }
 }
