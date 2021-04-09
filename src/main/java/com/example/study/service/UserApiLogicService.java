@@ -148,14 +148,6 @@ public class UserApiLogicService implements CrudInterface<UserApiRequest, UserAp
     }
 
 
-
-
-
-
-
-
-
-
     public Header<UserApiResponse> checkEmailCreate(Header<UserApiRequest> request) {
         //DB에 있는 User 데이터 가져오고
         UserApiRequest userApiRequest = request.getData();
