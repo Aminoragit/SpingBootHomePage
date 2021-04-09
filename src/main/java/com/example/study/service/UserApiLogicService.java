@@ -8,12 +8,15 @@ import com.example.study.model.network.request.UserApiRequest;
 import com.example.study.model.network.response.UserApiResponse;
 import com.example.study.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.ResponseStatus;
 
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 
 @Service
@@ -48,7 +51,7 @@ public class UserApiLogicService extends BaseService<UserApiRequest, UserApiResp
 
         //3.여러번 사용하므로 맨 아래에 메서드 작성했음
 
-        return response(newUser);
+        return Header.OK(response(newUser));
     }
 
 
@@ -62,6 +65,7 @@ public class UserApiLogicService extends BaseService<UserApiRequest, UserApiResp
         //아래처럼 람다식으로 해도 정상작동한다.
         return baseRepository.findById(id)
                 .map(user->response(user))
+                .map(Header::OK)
                .orElseGet(()->Header.ERROR("데이터없음"));
     }
 
@@ -93,6 +97,7 @@ public class UserApiLogicService extends BaseService<UserApiRequest, UserApiResp
         })
                 .map(user->baseRepository.save(user)) //update실행 DB에 반영
                 .map(user->response(user)) //userApiResponse
+                .map(Header::OK)
                 .orElseGet(()->Header.ERROR("데이터없음")); //위쪽에서 1개라도 데이터가 없다면 데이터없음으로 실행
     }
 
@@ -120,7 +125,7 @@ public class UserApiLogicService extends BaseService<UserApiRequest, UserApiResp
 
 
 
-    private Header<UserApiResponse> response(User user){
+    private static UserApiResponse response(User user){
         // user -> userApiResponse
         UserApiResponse userApiResponse = UserApiResponse.builder()
                 .id(user.getId())
@@ -134,9 +139,18 @@ public class UserApiLogicService extends BaseService<UserApiRequest, UserApiResp
                 .build();
 
         //Header + data return
-        return Header.OK(userApiResponse);
+        return userApiResponse;
     }
 
+    public Header<List<UserApiResponse>> search(Pageable pageable){
+        Page<User> users = baseRepository.findAll(pageable);
+
+        List<UserApiResponse> userApiResponseList = users.stream().map(user->
+                response(user)
+        ).collect(Collectors.toList());
+
+        return Header.OK(userApiResponseList);
+    }
 
 
 }
