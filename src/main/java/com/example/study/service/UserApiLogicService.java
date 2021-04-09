@@ -4,6 +4,7 @@ import com.example.study.ifs.CrudInterface;
 import com.example.study.model.entity.User;
 import com.example.study.model.enumclass.UserStatus;
 import com.example.study.model.network.Header;
+import com.example.study.model.network.Pagination;
 import com.example.study.model.network.request.UserApiRequest;
 import com.example.study.model.network.response.UserApiResponse;
 import com.example.study.repository.UserRepository;
@@ -149,7 +150,17 @@ public class UserApiLogicService extends BaseService<UserApiRequest, UserApiResp
                 response(user)
         ).collect(Collectors.toList());
 
-        return Header.OK(userApiResponseList);
+
+        //페이지 갯수를 확인하기 // password의 노출금지와 ApiResponse의 변경문제를 위해 아래처럼 따로 만들어준것이다.
+        Pagination pagination=Pagination.builder()
+                .totalPages(users.getTotalPages())
+                .totalElements(users.getTotalElements())
+                .currentPage(users.getNumber())
+                .currentElements(users.getNumberOfElements())
+                .build();
+
+
+        return Header.OK(userApiResponseList,pagination);
     }
 
 
