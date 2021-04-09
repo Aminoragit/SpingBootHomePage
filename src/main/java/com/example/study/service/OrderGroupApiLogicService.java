@@ -44,9 +44,14 @@ public class OrderGroupApiLogicService implements CrudInterface<OrderGroupApiReq
         //페이지상에 표시되게 하는것 response이다.
     }
 
+
+
     @Override
     public Header<OrderGroupApiResponse> read(Long id) {
-        return null;
+        return orderGroupRepository.findById(id)
+                .map(orderGroup ->
+                {return response(orderGroup);})//== map(this::response) == .map(orderGroup -> response(orderGroup)
+                .orElseGet(()->Header.ERROR("데이터 없음"));
     }
 
     @Override

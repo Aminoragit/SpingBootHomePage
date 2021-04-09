@@ -27,8 +27,10 @@ public class OrderGroupApiController implements CrudInterface<OrderGroupApiReque
     @Override
     @GetMapping("{id}")
     public Header<OrderGroupApiResponse> read(@PathVariable Long id) {
-        return null;
+        return orderGroupApiLogicService.read(id);
     }
+
+
 
     //RequestBody 입력한 body대로 전달된다는 얘기
     @Override
