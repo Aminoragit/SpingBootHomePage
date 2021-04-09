@@ -2,6 +2,7 @@ package com.example.study.controller.api;
 
 import com.example.study.controller.CrudController;
 import com.example.study.ifs.CrudInterface;
+import com.example.study.model.entity.Item;
 import com.example.study.model.network.Header;
 import com.example.study.model.network.request.ItemApiRequest;
 import com.example.study.model.network.response.ItemApiResponse;
@@ -13,16 +14,16 @@ import javax.annotation.PostConstruct;
 
 @RestController
 @RequestMapping("/api/item")
-public class ItemApiController extends CrudController<ItemApiRequest,ItemApiResponse> {
-
-    @Autowired
-    private ItemApiLogicService itemApiLogicService;
-
-    @PostConstruct
-    public void init(){
-        this.baseService=itemApiLogicService;
-    }
-
+public class ItemApiController extends CrudController<ItemApiRequest,ItemApiResponse,Item> {
+//
+//    @Autowired
+//    private ItemApiLogicService itemApiLogicService;
+//
+//    @PostConstruct
+//    public void init(){
+//        this.baseService=itemApiLogicService;
+//    }
+//
 
 // CrudController를 상속받으므로 아래와같이 중복해서 작성할 필요가 없다. 있어도 실행자체는 문제가 없다.
 

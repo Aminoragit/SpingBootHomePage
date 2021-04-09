@@ -3,6 +3,7 @@ package com.example.study.controller.api;
 
 import com.example.study.controller.CrudController;
 import com.example.study.ifs.CrudInterface;
+import com.example.study.model.entity.User;
 import com.example.study.model.network.Header;
 import com.example.study.model.network.request.UserApiRequest;
 import com.example.study.model.network.response.UserApiResponse;
@@ -21,16 +22,16 @@ import javax.annotation.PostConstruct;
 //일일히 CRUD를 설정해주는건 귀찮으니
 //ifs->CrudInterface 인터페이스 작성
 //각 Crud의 매핑설정
-public class UserApiController extends CrudController<UserApiRequest,UserApiResponse> {
+public class UserApiController extends CrudController<UserApiRequest,UserApiResponse, User> {
 
-    @Autowired
-    private UserApiLogicService userApiLogicService;
-
-    @PostConstruct
-    public void init(){
-        this.baseService=userApiLogicService;
-    }
+//    @Autowired
+//    private UserApiLogicService userApiLogicService;
 //
+//    @PostConstruct
+//    public void init(){
+//        this.baseService=userApiLogicService;
+//    }
+////
 //    @Override
 //    @PostMapping("/user") // /api/user
 //    public Header<UserApiResponse>

@@ -15,6 +15,7 @@ import java.time.LocalDateTime;
 
 @Service
 public class ItemApiLogicService extends BaseService<ItemApiRequest, ItemApiResponse,Item> {
+
     @Autowired
     private PartnerRepository partnerRepository;
 
