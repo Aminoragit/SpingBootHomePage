@@ -93,6 +93,10 @@ public class ItemApiLogicService implements CrudInterface<ItemApiRequest, ItemAp
 
 
     private Header<ItemApiResponse> response(Item item){
+        String statusTitle=item.getStatus().getDescription();
+        //id나 title이나 description같이 00Status에서 적은 한글을 표시해줄수 있다.
+
+
         ItemApiResponse body = ItemApiResponse.builder()
                 .id(item.getId())
                 .status(item.getStatus())
