@@ -89,7 +89,7 @@ public class ItemApiLogicService extends BaseService<ItemApiRequest, ItemApiResp
     }
 
 
-    private Header<ItemApiResponse> response(Item item){
+    public Header<ItemApiResponse> response(Item item){
         String statusTitle=item.getStatus().getDescription();
         //id나 title이나 description같이 00Status에서 적은 한글을 표시해줄수 있다.
 

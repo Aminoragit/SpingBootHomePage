@@ -6,6 +6,7 @@ import com.example.study.model.entity.User;
 import com.example.study.model.network.Header;
 import com.example.study.model.network.request.UserApiRequest;
 import com.example.study.model.network.response.UserApiResponse;
+import com.example.study.model.network.response.UserOrderInfoApiResponse;
 import com.example.study.service.UserApiLogicService;
 import jdk.internal.org.jline.utils.Log;
 import lombok.extern.slf4j.Slf4j;
@@ -31,6 +32,12 @@ public class UserApiController extends CrudController<UserApiRequest,UserApiResp
     log.info("{}",pageable);
         return userApiLogicService.search(pageable);
 }
+
+        @GetMapping("/{id}/orderInfo")
+        public Header<UserOrderInfoApiResponse> orderInfo(@PathVariable Long id)
+             {
+                return userApiLogicService.orderInfo(id);
+             }
 
 }
 
