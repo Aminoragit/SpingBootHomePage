@@ -33,11 +33,10 @@ public class UserApiController extends CrudController<UserApiRequest,UserApiResp
         return userApiLogicService.search(pageable);
 }
 
-        @GetMapping("/{id}/orderInfo")
-        public Header<UserOrderInfoApiResponse> orderInfo(@PathVariable Long id)
-             {
-                return userApiLogicService.orderInfo(id);
-             }
-
+    @GetMapping("/{id}/orderInfo")
+    public Header<UserOrderInfoApiResponse> orderInfo(@PathVariable Long id)
+    {
+        return userApiLogicService.orderInfo(id);
+    }
 }
 

@@ -1,17 +1,15 @@
 package com.example.study.service;
 
-import com.example.study.ifs.CrudInterface;
 import com.example.study.model.entity.OrderGroup;
+import com.example.study.model.entity.Settlement;
 import com.example.study.model.entity.User;
 import com.example.study.model.enumclass.UserStatus;
 import com.example.study.model.network.Header;
 import com.example.study.model.network.Pagination;
 import com.example.study.model.network.request.UserApiRequest;
-import com.example.study.model.network.response.ItemApiResponse;
-import com.example.study.model.network.response.OrderGroupApiResponse;
-import com.example.study.model.network.response.UserApiResponse;
-import com.example.study.model.network.response.UserOrderInfoApiResponse;
+import com.example.study.model.network.response.*;
 import com.example.study.repository.UserRepository;
+import jdk.javadoc.internal.doclets.formats.html.markup.Head;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -20,6 +18,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.ResponseStatus;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -35,6 +35,7 @@ class AlreadyExistsException extends RuntimeException {
 
 @Service
 public class UserApiLogicService extends BaseService<UserApiRequest, UserApiResponse,User> {
+
     @Autowired
     private UserRepository userRepository;
     @Autowired
@@ -95,10 +96,8 @@ public class UserApiLogicService extends BaseService<UserApiRequest, UserApiResp
     ////////////////////
     @Override
     public Header<UserApiResponse> update(Header<UserApiRequest> request) {
-
         //1. data를 가져오고
         UserApiRequest userApiRequest = request.getData();
-
 
         //2. id에 맞는 user데이터를 가져오고
         Optional<User> optional = baseRepository.findById(userApiRequest.getId());
@@ -121,8 +120,6 @@ public class UserApiLogicService extends BaseService<UserApiRequest, UserApiResp
                 .map(Header::OK)
                 .orElseGet(()->Header.ERROR("데이터없음")); //위쪽에서 1개라도 데이터가 없다면 데이터없음으로 실행
     }
-
-
 
 
     ////////////////////
@@ -183,20 +180,14 @@ public class UserApiLogicService extends BaseService<UserApiRequest, UserApiResp
         return Header.OK(userApiResponseList,pagination);
     }
 
-
-
-
     public Header<UserOrderInfoApiResponse> orderInfo(Long id){
         //사용자를 찾아오고
         User user = userRepository.getOne(id);
 
         UserApiResponse userApiResponse = response(user);
 
-
-
         //orderGroup을 가져온후
-        List<OrderGroup> orderGroupList=user.getOrderGroupList();
-
+        List<OrderGroup> orderGroupList = user.getOrderGroupList();
         List<OrderGroupApiResponse> orderGroupApiResponseList=orderGroupList.stream()
                 .map(orderGroup -> {
                     OrderGroupApiResponse orderGroupApiResponse = orderGroupApiLogicService.response(orderGroup).getData();
@@ -213,20 +204,16 @@ public class UserApiLogicService extends BaseService<UserApiRequest, UserApiResp
                 .collect(Collectors.toList());
 
 
-
-
                 //마지막으로 user에 그룹을 지정하고
                 //userorderInfoApiResponse에 빌드해주고 반환
-                userApiResponse.setOrderGroupApiResponseList(orderGroupApiResponseList);
+        userApiResponse.setOrderGroupApiResponseList(orderGroupApiResponseList);
 
 
-                UserOrderInfoApiResponse userOrderInfoApiResponse=UserOrderInfoApiResponse
-                        .builder()
-                        .userApiResponse(userApiResponse)
-                        .build();
-
-                return Header.OK(userOrderInfoApiResponse);
-
+        UserOrderInfoApiResponse userOrderInfoApiResponse=UserOrderInfoApiResponse
+                .builder()
+                .userApiResponse(userApiResponse)
+                .build();
+        return Header.OK(userOrderInfoApiResponse);
     }
 
 
@@ -261,4 +248,59 @@ public class UserApiLogicService extends BaseService<UserApiRequest, UserApiResp
     }
 
 
+
+
+    //힘들당
+    public Header<UserTotalPriceInfoApiResponse> orderTotalPriceInfo(Long id) {
+        //1) id로 사용자의 데이터를 가져온다.(baseData)
+        User baseData = userRepository.getOne(id);
+
+        //2) 사용자가 주문한 OrderGroup의 리스트를 가져온다.
+        List<OrderGroup> orderGroupList = baseData.getOrderGroupList();
+        //일단 프린트로 테스트 결과 oderGroup에 해당 사용자 id에 맞는 데이터들이 PersistentBag 형태로 출력되었다.
+        //3) 가져올때 total_price와 user_id만 가져온다.
+        //호출한 orderGroupList의 값들중 totlaPirce들만 불러온후 List형태로 변환
+        System.out.println(orderGroupList.stream().map(getDetail->getDetail.getTotalPrice().toBigInteger()).collect(Collectors.toList()));
+        
+        //user_id는 그냥 Get 호출때 사용한 baseData의 id를 사용하자
+        System.out.println(baseData.getId());
+
+        
+
+        //4) 가져온 리스트의 total_price의 총합 stream().maToInt.sum으로 총합을 구해준다.
+
+
+        //5) 구한 결과를 Settlement 테이블에 user_id와 함게 업데이트한다.
+
+
+        //6) read 실행시 위의 진행이 반복되게 한다.
+
+
+        //7) 별도 response로 user_id와 total_price가 출력되게 한다.
+
+
+        //8) 저장된 settlement값은 read가 끝난후 초기화해준다. 중복저장방지 및 보안
+        //9) profit
+
+//        //userTotalPriceInfoApiResponse로 Settlement에 저장된 값을 출력한다.
+//        UserTotalPriceInfoApiResponse userTotalPriceInfoApiResponse=UserTotalPriceInfoApiResponse
+//                .builder()
+//                .userId()
+//                .totalPrice()
+//                .build();
+        return null;
+    }
+
+    public Header<UserTotalPriceInfoApiResponse> TotalPriceResponse(Settlement settlement){
+
+
+        UserTotalPriceInfoApiResponse body = UserTotalPriceInfoApiResponse.builder()
+                .totalPrice(settlement.getTotalPrice())
+                .userId(settlement.getUserId())
+                .build();
+
+        return Header.OK(body);
+
+
+    }
 }

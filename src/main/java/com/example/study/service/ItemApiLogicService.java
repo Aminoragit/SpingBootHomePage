@@ -46,8 +46,7 @@ public class ItemApiLogicService extends BaseService<ItemApiRequest, ItemApiResp
     public Header<ItemApiResponse> read(Long id) {
         return baseRepository
                 .findById(id)
-                .map(
-                        item->response(item))
+                .map(item->response(item))
                 .orElseGet(()-> Header.ERROR("데이터 없음"));
 
 

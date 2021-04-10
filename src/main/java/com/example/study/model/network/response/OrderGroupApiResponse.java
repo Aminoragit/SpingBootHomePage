@@ -18,10 +18,7 @@ import java.util.List;
 public class OrderGroupApiResponse {
     private Long id;
     private String status;
-
-
     private OrderType orderType;
-
     private String revAddress;
     private String revName;
     private String paymentType;
@@ -31,7 +28,4 @@ public class OrderGroupApiResponse {
     private LocalDateTime arrivalDate;
     private Long userId;
     private List<ItemApiResponse> itemApiResponseList;
-
-
-
 }
