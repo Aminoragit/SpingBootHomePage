@@ -8,8 +8,8 @@ import com.example.study.model.network.Header;
 import com.example.study.model.network.Pagination;
 import com.example.study.model.network.request.UserApiRequest;
 import com.example.study.model.network.response.*;
+import com.example.study.repository.SettlementRepository;
 import com.example.study.repository.UserRepository;
-import jdk.javadoc.internal.doclets.formats.html.markup.Head;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -17,9 +17,9 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.ResponseStatus;
 
+import java.math.BigDecimal;
+import java.math.BigInteger;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -36,6 +36,9 @@ class AlreadyExistsException extends RuntimeException {
 @Service
 public class UserApiLogicService extends BaseService<UserApiRequest, UserApiResponse,User> {
 
+
+    @Autowired
+    private SettlementRepository settlementRepository;
     @Autowired
     private UserRepository userRepository;
     @Autowired
@@ -260,17 +263,27 @@ public class UserApiLogicService extends BaseService<UserApiRequest, UserApiResp
         //일단 프린트로 테스트 결과 oderGroup에 해당 사용자 id에 맞는 데이터들이 PersistentBag 형태로 출력되었다.
         //3) 가져올때 total_price와 user_id만 가져온다.
         //호출한 orderGroupList의 값들중 totlaPirce들만 불러온후 List형태로 변환
-        System.out.println(orderGroupList.stream().map(getDetail->getDetail.getTotalPrice().toBigInteger()).collect(Collectors.toList()));
-        
-        //user_id는 그냥 Get 호출때 사용한 baseData의 id를 사용하자
-        System.out.println(baseData.getId());
+        List<BigInteger> resultList=orderGroupList.stream().map(getDetail->getDetail.getTotalPrice().toBigInteger()).collect(Collectors.toList());
+        System.out.println(resultList.stream().mapToLong(BigInteger::intValue).sum());
 
-        
 
         //4) 가져온 리스트의 total_price의 총합 stream().maToInt.sum으로 총합을 구해준다.
-
+        //리스트 내부값들을 모두 합친값 == TotalPrice BigDecimal로 캐스팅
+        BigDecimal  totalPrice = new BigDecimal(resultList.stream().mapToLong(BigInteger::intValue).sum());
+        //user_id는 그냥 Get 호출때 사용한 baseData의 id를 사용하자
+        long userId = baseData.getId();
 
         //5) 구한 결과를 Settlement 테이블에 user_id와 함게 업데이트한다.
+        Settlement settlement = Settlement.builder()
+                .price(totalPrice)
+                .userId(userId)
+                .build();
+
+        Settlement newSettlement=settlementRepository.save(settlement);
+
+        return TotalPriceResponse(newSettlement);
+
+
 
 
         //6) read 실행시 위의 진행이 반복되게 한다.
@@ -282,20 +295,13 @@ public class UserApiLogicService extends BaseService<UserApiRequest, UserApiResp
         //8) 저장된 settlement값은 read가 끝난후 초기화해준다. 중복저장방지 및 보안
         //9) profit
 
-//        //userTotalPriceInfoApiResponse로 Settlement에 저장된 값을 출력한다.
-//        UserTotalPriceInfoApiResponse userTotalPriceInfoApiResponse=UserTotalPriceInfoApiResponse
-//                .builder()
-//                .userId()
-//                .totalPrice()
-//                .build();
-        return null;
     }
 
     public Header<UserTotalPriceInfoApiResponse> TotalPriceResponse(Settlement settlement){
 
 
         UserTotalPriceInfoApiResponse body = UserTotalPriceInfoApiResponse.builder()
-                .totalPrice(settlement.getTotalPrice())
+                .price(settlement.getPrice())
                 .userId(settlement.getUserId())
                 .build();
 

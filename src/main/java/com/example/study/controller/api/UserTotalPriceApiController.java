@@ -20,9 +20,9 @@ public class UserTotalPriceApiController {
     @Autowired
     private UserApiLogicService userApiLogicService;
 
-    @GetMapping("/settlement/{id}")
-    public Header<UserTotalPriceInfoApiResponse> orderTotalPriceInfo(@PathVariable Long id)
+    @GetMapping("/settlement/{userId}")
+    public Header<UserTotalPriceInfoApiResponse> orderTotalPriceInfo(@PathVariable Long userId)
     {
-        return userApiLogicService.orderTotalPriceInfo(id);
+        return userApiLogicService.orderTotalPriceInfo(userId);
     }
 }

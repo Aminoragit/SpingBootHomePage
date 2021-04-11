@@ -13,7 +13,6 @@ import java.math.BigDecimal;
 @AllArgsConstructor
 @Builder
 public class UserTotalPriceInfoApiResponse {
-
     private Long userId;
-    private BigDecimal totalPrice;
+    private BigDecimal price;
 }
