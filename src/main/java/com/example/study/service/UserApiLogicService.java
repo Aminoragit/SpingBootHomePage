@@ -282,19 +282,6 @@ public class UserApiLogicService extends BaseService<UserApiRequest, UserApiResp
         Settlement newSettlement=settlementRepository.save(settlement);
 
         return TotalPriceResponse(newSettlement);
-
-
-
-
-        //6) read 실행시 위의 진행이 반복되게 한다.
-
-
-        //7) 별도 response로 user_id와 total_price가 출력되게 한다.
-
-
-        //8) 저장된 settlement값은 read가 끝난후 초기화해준다. 중복저장방지 및 보안
-        //9) profit
-
     }
 
     public Header<UserTotalPriceInfoApiResponse> TotalPriceResponse(Settlement settlement){
