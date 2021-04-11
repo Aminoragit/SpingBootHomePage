@@ -66,12 +66,7 @@ public class OrderGroupApiLogicService extends BaseService<OrderGroupApiRequest,
                             .setTotalQuantity(body.getTotalQuantity())
                             .setOrderAt(body.getOrderAt())
                             .setArrivalDate(body.getArrivalDate())
-                            .setUser(
-                                    userRepository
-                                            .getOne(
-                                                body.getUserId()
-                                            )
-                            );
+                            .setUser(userRepository.getOne(body.getUserId()));
                 return orderGroup;
                 })
                 .map(changeOrderGroup->baseRepository.save(changeOrderGroup))

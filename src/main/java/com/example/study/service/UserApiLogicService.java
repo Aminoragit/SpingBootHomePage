@@ -261,6 +261,7 @@ public class UserApiLogicService extends BaseService<UserApiRequest, UserApiResp
         //2) 사용자가 주문한 OrderGroup의 리스트를 가져온다.
         List<OrderGroup> orderGroupList = baseData.getOrderGroupList();
         //일단 프린트로 테스트 결과 oderGroup에 해당 사용자 id에 맞는 데이터들이 PersistentBag 형태로 출력되었다.
+
         //3) 가져올때 total_price와 user_id만 가져온다.
         //호출한 orderGroupList의 값들중 totlaPirce들만 불러온후 List형태로 변환
         List<BigInteger> resultList=orderGroupList.stream().map(getDetail->getDetail.getTotalPrice().toBigInteger()).collect(Collectors.toList());
@@ -270,19 +271,35 @@ public class UserApiLogicService extends BaseService<UserApiRequest, UserApiResp
         //4) 가져온 리스트의 total_price의 총합 stream().maToInt.sum으로 총합을 구해준다.
         //리스트 내부값들을 모두 합친값 == TotalPrice BigDecimal로 캐스팅
         BigDecimal  totalPrice = new BigDecimal(resultList.stream().mapToLong(BigInteger::intValue).sum());
+
         //user_id는 그냥 Get 호출때 사용한 baseData의 id를 사용하자
         long userId = baseData.getId();
 
-        //5) 구한 결과를 Settlement 테이블에 user_id와 함게 업데이트한다.
-        Settlement settlement = Settlement.builder()
-                .price(totalPrice)
-                .userId(userId)
-                .build();
 
-        Settlement newSettlement=settlementRepository.save(settlement);
 
-        return TotalPriceResponse(newSettlement);
+        //수정사항 발생
+        //1) 먼저 user_id가 있는지 확인부터 하고 있으면 update 없으면 create (settlementcreate) 해주자.
+        return settlementRepository.findByUserId(userId)
+                .map(updateSettlement -> {
+                    updateSettlement.setUserId(userId)
+                            .setPrice(totalPrice);
+                    return updateSettlement;
+                })
+                .map(changeSettlement->settlementRepository.save(changeSettlement))
+                .map(uSettlement->TotalPriceResponse(uSettlement))
+
+                //만일 해당 userId로 찾을수 없다면 Create실행->null
+                .orElseGet(
+                        ()->createSettlement(totalPrice,userId)
+                        );
     }
+
+
+
+
+
+
+
 
     public Header<UserTotalPriceInfoApiResponse> TotalPriceResponse(Settlement settlement){
 
@@ -293,7 +310,16 @@ public class UserApiLogicService extends BaseService<UserApiRequest, UserApiResp
                 .build();
 
         return Header.OK(body);
-
-
     }
+
+    //settlement crate 메서드
+    public Header<UserTotalPriceInfoApiResponse> createSettlement(BigDecimal totalPrice,Long userId) {
+        Settlement settlement = Settlement.builder()
+                .price(totalPrice)
+                .userId(userId)
+                .build();
+        Settlement newSettlement = settlementRepository.save(settlement);
+        return TotalPriceResponse(newSettlement);
+    }
+
 }
